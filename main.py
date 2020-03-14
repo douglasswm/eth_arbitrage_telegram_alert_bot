@@ -58,7 +58,7 @@ def job():
     hover = ActionChains(driver2).move_to_element(element_to_hover_over)
     hover.perform()
     time.sleep(1)
-    driver2.find_element_by_xpath('//*[@id="kebWrapper"]/div[2]/div/ul/li[4]/a').send_keys(Keys.COMMAND + 't') 
+    driver2.find_element_by_xpath('//*[@id="kebWrapper"]/div[2]/div/ul/li[4]/a').send_keys(Keys.CONTROL + Keys.RETURN)
     window_after = driver2.window_handles[1]
     driver2.switch_to.window(window_after)
     time.sleep(5)
