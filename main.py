@@ -33,7 +33,9 @@ def job():
     
     # INITIALISE CHROME SESSION
     options = webdriver.ChromeOptions()
-    options.add_argument('headless')
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome('/usr/bin/chromedriver',chrome_options=options)
     driver2 = webdriver.Chrome('/usr/bin/chromedriver',chrome_options=options)
 
