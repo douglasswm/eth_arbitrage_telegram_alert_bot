@@ -64,8 +64,11 @@ def job():
     time.sleep(5)
     keb_soup = BeautifulSoup(driver2.page_source, "html.parser")
     kebhana = keb_soup.find("div", id = "searchContentDiv")
+    print(kebhana)
     kebhana_data = kebhana.find_all("tr")
+    print(kebhana_data)
     kebhana_data2 = kebhana_data[11].find_all("td")
+    print(kebhana_data2)
     
     # CONVERT DATA TO FLOATS
     bi_eth = float(crypto_price[1].string.strip('SGD'))
