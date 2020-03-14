@@ -34,8 +34,8 @@ def job():
     # INITIALISE CHROME SESSION
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
-    driver = webdriver.Chrome('C:/Users/dougl/Desktop/chromedriver',chrome_options=options)
-    driver2 = webdriver.Chrome('C:/Users/dougl/Desktop/chromedriver',chrome_options=options)
+    driver = webdriver.Chrome('/usr/bin/chromedriver',chrome_options=options)
+    driver2 = webdriver.Chrome('/usr/bin/chromedriver',chrome_options=options)
 
     # CALL BINANCE URL
     driver.get(binance_url)
