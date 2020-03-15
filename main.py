@@ -23,6 +23,17 @@ def job():
     bithumb_url = "https://www.bithumb.com/"
     binance_url = "https://www.binance.sg/en"
     kebhana_url = "https://www.kebhana.com/easyone_index_en.html"
+    coincola_url = "https://www.coincola.com/sell-ethereum?country_code=CN&pageNo=1"
+
+    # CALL COINCOLA URL
+    response_coincola = requests.get(coincola_url)
+
+    # INITIALISE BS4 ON COINCOLA RESPONSE
+    coincola_soup = BeautifulSoup(response_coincola.content, "html.parser")
+    coincola = coincola_soup.find("div", class_ = "jsx-4262417281 price")
+
+    # SANITISE COINCOLA ETH RATE
+    string_coincola = unicodedata.normalize('NFKD', coincola.text).encode('ascii','ignore')
 
     # CALL BITHUMB URL
     response_bithumb = requests.get(bithumb_url)
@@ -78,16 +89,21 @@ def job():
     kebhana_data2 = kebhana_data[11].find_all("td")
     
     # CONVERT DATA TO FLOATS
+    cola_eth = float(string_coincola.strip('CNY'))
     bi_eth = float(crypto_price[1].string.strip('SGD'))
     keb_rate = float(kebhana_data2[5].string)
     bithumb_eth = float(string_bithumb_rate.replace(',', ''))
+    cny_rate = float('5')
 
     # CALCULATE PREMIUM
     compute = ((((bithumb_eth/keb_rate)/bi_eth)*100) - 100)
+    compute_cola = ((((cola_eth/cny_rate)/bi_eth)*100) - 100)
 
     # SEND ALERT TO TELGRAM BOT
     text = "ETH@BINANCE: " + str(bi_eth) + "\r\n" +"ETH@BITHUMB: " + str(bithumb_eth) + "\r\n" + "KEBHANA SGD/KRW: " + str(keb_rate) + "\r\n" + "PREMIUM: " + str(compute) + "%"
+    text2 = "CHINA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth) + "\r\n" + "ASSUMED SGD/CNY: " + str(cny_rate) + "\r\n" + "PREMIUM: " + str(compute_cola) + "%"
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text))
+    requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text2))
     driver2.quit()
 
 # RUN CRON EVERY 5 MINUTE
