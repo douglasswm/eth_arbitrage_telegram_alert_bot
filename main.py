@@ -59,7 +59,7 @@ def job():
 
     # CALL BINANCE URL
     driver.get(binance_url)
-    driver.implicitly_wait(2000)
+    driver.implicitly_wait(1000)
 
     # INITIALISE BS4 ON BINANCE RESPONSE
     time.sleep(4)
@@ -74,7 +74,7 @@ def job():
 
     #KEB HANA
     driver2.get(kebhana_url)
-    driver2.implicitly_wait(2000)
+    driver2.implicitly_wait(1000)
     time.sleep(4)
     element_to_hover_over = driver2.find_element_by_xpath('//*[@id="kebWrapper"]/div[2]/a')
     time.sleep(1)
