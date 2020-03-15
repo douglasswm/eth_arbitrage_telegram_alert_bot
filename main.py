@@ -86,7 +86,7 @@ def job():
     time.sleep(1)
     window_after = driver2.window_handles[1]
     driver2.switch_to.window(window_after)
-    time.sleep(10)
+    time.sleep(1)
     keb_soup = BeautifulSoup(driver2.page_source, "html.parser")
     time.sleep(1)
     kebhana = keb_soup.find("div", id = "searchContentDiv")
