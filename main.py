@@ -15,6 +15,10 @@ load_dotenv()
 
 def job():
 
+    # TELEGRAM CREDENTIALS
+    api_key = os.getenv("TELEGRAM_BOT_API_KEY")
+    chat_id = "@krstonksspin"
+
     # WEBSITE URL
     bithumb_url = "https://www.bithumb.com/"
     binance_url = "https://www.binance.sg/en"
@@ -30,6 +34,9 @@ def job():
     
     # SANITISE BITHUMB ETH RATE
     string_bithumb_rate = unicodedata.normalize('NFKD', bithumb_rate).encode('ascii','ignore')
+
+    # SEND TO TELE BITHUMB
+    requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(string_bithumb_rate))
     
     # INITIALISE CHROME SESSION
     options = webdriver.ChromeOptions()
@@ -41,37 +48,37 @@ def job():
 
     # CALL BINANCE URL
     driver.get(binance_url)
-    driver.implicitly_wait(100)
+    driver.implicitly_wait(2000)
 
     # INITIALISE BS4 ON BINANCE RESPONSE
-    time.sleep(2)
+    time.sleep(4)
     soup2 = BeautifulSoup(driver.page_source, "html.parser")
     crypto_price = soup2.find_all("span", attrs={"class": "price"})
+
+    # SEND TO TELE BITHUMB
+    requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(crypto_price))
     driver.quit()
-    time.sleep(1)
+    time.sleep(2)
 
     #KEB HANA
     driver2.get(kebhana_url)
-    driver2.implicitly_wait(100)
-    time.sleep(2)
+    driver2.implicitly_wait(2000)
+    time.sleep(4)
     element_to_hover_over = driver2.find_element_by_xpath('//*[@id="kebWrapper"]/div[2]/a')
     hover = ActionChains(driver2).move_to_element(element_to_hover_over)
     hover.perform()
-    time.sleep(1)
+    time.sleep(2)
     driver2.find_element_by_xpath('//*[@id="kebWrapper"]/div[2]/div/ul/li[4]/a').send_keys(Keys.CONTROL + Keys.RETURN)
     window_after = driver2.window_handles[1]
     driver2.switch_to.window(window_after)
-    time.sleep(5)
+    time.sleep(10)
     keb_soup = BeautifulSoup(driver2.page_source, "html.parser")
     kebhana = keb_soup.find("div", id = "searchContentDiv")
-    print(kebhana)
     kebhana_data = kebhana.find_all("tr")
-    print(kebhana_data)
     kebhana_data2 = kebhana_data[11].find_all("td")
-    print(kebhana_data2)
     
     # CONVERT DATA TO FLOATS
-    bi_eth = float(crypto_price[1].string.strip('SGD'))
+    bi_eth = float(crypto_price[1].strip('SGD'))
     keb_rate = float(kebhana_data2[5].string)
     bithumb_eth = float(string_bithumb_rate.replace(',', ''))
 
@@ -80,17 +87,15 @@ def job():
 
     # SEND ALERT TO TELGRAM BOT
     text = "ETH@BINANCE: " + str(bi_eth) + "\r\n" +"ETH@BITHUMB: " + str(bithumb_eth) + "\r\n" + "KEBHANA SGD/KRW: " + str(keb_rate) + "\r\n" + "PREMIUM: " + str(compute) + "%"
-    api_key = os.getenv("TELEGRAM_BOT_API_KEY")
-    chat_id = "@krstonksspin"
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text))
     driver2.quit()
 
 # RUN CRON EVERY 2 MINUTE
-schedule.every(2).minutes.do(job)
+schedule.every(5).minutes.do(job)
 
 while True:
     schedule.run_pending()
-    time.sleep(1)
+    time.sleep(3)
 
 
 
