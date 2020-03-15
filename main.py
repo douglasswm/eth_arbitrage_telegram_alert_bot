@@ -92,9 +92,16 @@ def job():
     kebhana = keb_soup.find("div", id = "searchContentDiv")
     time.sleep(1)
     kebhana_data = kebhana.find_all("tr")
+    if kebhana_data == []:
+        kebhana_data_re = kebhana.find_all("tr")
+        kebhana_data = kebhana_data_re
+        time.sleep(1)
+    else:
+        print(kebhana_data)    
     time.sleep(1)
     kebhana_data2 = kebhana_data[11].find_all("td")
     time.sleep(1)
+    driver2.quit()
     
     # CONVERT DATA TO FLOATS
     cola_eth = float(string_coincola.strip('CNY'))
@@ -115,14 +122,14 @@ def job():
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text))
     time.sleep(1)
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text2))
-    driver2.quit()
+    
 
-# RUN CRON EVERY 6 MINUTE
-schedule.every(6).minutes.do(job)
+# RUN CRON EVERY 4 MINUTE
+schedule.every(4).minutes.do(job)
 
 while True:
     schedule.run_pending()
-    time.sleep(3)
+    time.sleep(1)
 
 
 
