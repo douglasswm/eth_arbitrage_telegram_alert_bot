@@ -36,15 +36,15 @@ def job():
     string_bithumb_rate = unicodedata.normalize('NFKD', bithumb_rate).encode('ascii','ignore')
 
     # SEND TO TELE BITHUMB
-    requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(string_bithumb_rate))
+    # requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(string_bithumb_rate))
     
     # INITIALISE CHROME SESSION
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome('/usr/local/bin/chromedriver',chrome_options=options)
-    driver2 = webdriver.Chrome('/usr/local/bin/chromedriver',chrome_options=options)
+    driver = webdriver.Chrome('/usr/bin/chromedriver',chrome_options=options)
+    driver2 = webdriver.Chrome('/usr/bin/chromedriver',chrome_options=options)
 
     # CALL BINANCE URL
     driver.get(binance_url)
@@ -56,7 +56,7 @@ def job():
     crypto_price = soup2.find_all("span", attrs={"class": "price"})
 
     # SEND TO TELE BITHUMB
-    requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(crypto_price))
+    # requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(crypto_price))
     driver.quit()
     time.sleep(2)
 
@@ -78,7 +78,7 @@ def job():
     kebhana_data2 = kebhana_data[11].find_all("td")
     
     # CONVERT DATA TO FLOATS
-    bi_eth = float(crypto_price[1].strip('SGD'))
+    bi_eth = float(crypto_price[1].string.strip('SGD'))
     keb_rate = float(kebhana_data2[5].string)
     bithumb_eth = float(string_bithumb_rate.replace(',', ''))
 
@@ -90,7 +90,7 @@ def job():
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text))
     driver2.quit()
 
-# RUN CRON EVERY 2 MINUTE
+# RUN CRON EVERY 5 MINUTE
 schedule.every(5).minutes.do(job)
 
 while True:
