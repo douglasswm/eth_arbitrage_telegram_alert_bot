@@ -94,35 +94,57 @@ def job():
     kebhana_data = kebhana.find_all("tr")
     if kebhana_data == []:
         kebhana_data_re = kebhana.find_all("tr")
-        kebhana_data = kebhana_data_re
+        print("FAIL")
+        print(kebhana_data_re)
         time.sleep(1)
+        kebhana_data2 = kebhana_data_re[11].find_all("td")
+        time.sleep(1)
+        driver2.quit()
+        # CONVERT DATA TO FLOATS
+        cola_eth = float(string_coincola.strip('CNY'))
+        bi_eth = float(crypto_price[1].string.strip('SGD'))
+        keb_rate = float(kebhana_data2[5].string)
+        bithumb_eth = float(string_bithumb_rate.replace(',', ''))
+        cny_rate_5 = float('5')
+        cny_rate_49 = float('4.9')
+
+        # CALCULATE PREMIUM
+        compute = ((((bithumb_eth/keb_rate)/bi_eth)*100) - 100)
+        compute_cola_5 = ((((cola_eth/cny_rate_5)/bi_eth)*100) - 100)
+        compute_cola_49 = ((((cola_eth/cny_rate_49)/bi_eth)*100) - 100)
+
+        # SEND ALERT TO TELGRAM BOT
+        text = "KOREA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" +"ETH@BITHUMB: " + str(bithumb_eth) + "\r\n" + "KEBHANA SGD/KRW: " + str(keb_rate) + "\r\n" + "PREMIUM: " + str(compute) + "%"
+        text2 = "CHINA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth) + "\r\n" + "PREMIUM@SGD/CNY[4.9]: " + str(compute_cola_49) + "%" + "\r\n" + "PREMIUM@SGD/CNY[5.0]: " + str(compute_cola_5) + "%"
+        requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text))
+        time.sleep(1)
+        requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text2))
     else:
-        print(kebhana_data)    
-    time.sleep(1)
-    kebhana_data2 = kebhana_data[11].find_all("td")
-    time.sleep(1)
-    driver2.quit()
-    
-    # CONVERT DATA TO FLOATS
-    cola_eth = float(string_coincola.strip('CNY'))
-    bi_eth = float(crypto_price[1].string.strip('SGD'))
-    keb_rate = float(kebhana_data2[5].string)
-    bithumb_eth = float(string_bithumb_rate.replace(',', ''))
-    cny_rate_5 = float('5')
-    cny_rate_49 = float('4.9')
+        print("PASS")
+        print(kebhana_data)
+        time.sleep(1)
+        kebhana_data2 = kebhana_data[11].find_all("td")
+        time.sleep(1)
+        driver2.quit()
+        # CONVERT DATA TO FLOATS
+        cola_eth = float(string_coincola.strip('CNY'))
+        bi_eth = float(crypto_price[1].string.strip('SGD'))
+        keb_rate = float(kebhana_data2[5].string)
+        bithumb_eth = float(string_bithumb_rate.replace(',', ''))
+        cny_rate_5 = float('5')
+        cny_rate_49 = float('4.9')
 
-    # CALCULATE PREMIUM
-    compute = ((((bithumb_eth/keb_rate)/bi_eth)*100) - 100)
-    compute_cola_5 = ((((cola_eth/cny_rate_5)/bi_eth)*100) - 100)
-    compute_cola_49 = ((((cola_eth/cny_rate_49)/bi_eth)*100) - 100)
+        # CALCULATE PREMIUM
+        compute = ((((bithumb_eth/keb_rate)/bi_eth)*100) - 100)
+        compute_cola_5 = ((((cola_eth/cny_rate_5)/bi_eth)*100) - 100)
+        compute_cola_49 = ((((cola_eth/cny_rate_49)/bi_eth)*100) - 100)
 
-    # SEND ALERT TO TELGRAM BOT
-    text = "KOREA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" +"ETH@BITHUMB: " + str(bithumb_eth) + "\r\n" + "KEBHANA SGD/KRW: " + str(keb_rate) + "\r\n" + "PREMIUM: " + str(compute) + "%"
-    text2 = "CHINA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth) + "\r\n" + "PREMIUM@SGD/CNY[4.9]: " + str(compute_cola_49) + "%" + "\r\n" + "PREMIUM@SGD/CNY[5.0]: " + str(compute_cola_5) + "%"
-    requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text))
-    time.sleep(1)
-    requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text2))
-    
+        # SEND ALERT TO TELGRAM BOT
+        text = "KOREA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" +"ETH@BITHUMB: " + str(bithumb_eth) + "\r\n" + "KEBHANA SGD/KRW: " + str(keb_rate) + "\r\n" + "PREMIUM: " + str(compute) + "%"
+        text2 = "CHINA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth) + "\r\n" + "PREMIUM@SGD/CNY[4.9]: " + str(compute_cola_49) + "%" + "\r\n" + "PREMIUM@SGD/CNY[5.0]: " + str(compute_cola_5) + "%"
+        requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text))
+        time.sleep(1)
+        requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text2))
 
 # RUN CRON EVERY 4 MINUTE
 schedule.every(4).minutes.do(job)
