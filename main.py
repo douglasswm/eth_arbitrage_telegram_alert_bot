@@ -64,6 +64,7 @@ def job():
     # INITIALISE BS4 ON BINANCE RESPONSE
     time.sleep(4)
     soup2 = BeautifulSoup(driver.page_source, "html.parser")
+    time.sleep(1)
     crypto_price = soup2.find_all("span", attrs={"class": "price"})
 
     # SEND TO TELE BITHUMB
@@ -76,17 +77,24 @@ def job():
     driver2.implicitly_wait(2000)
     time.sleep(4)
     element_to_hover_over = driver2.find_element_by_xpath('//*[@id="kebWrapper"]/div[2]/a')
+    time.sleep(1)
     hover = ActionChains(driver2).move_to_element(element_to_hover_over)
+    time.sleep(1)
     hover.perform()
     time.sleep(2)
     driver2.find_element_by_xpath('//*[@id="kebWrapper"]/div[2]/div/ul/li[4]/a').send_keys(Keys.CONTROL + Keys.RETURN)
+    time.sleep(1)
     window_after = driver2.window_handles[1]
     driver2.switch_to.window(window_after)
     time.sleep(10)
     keb_soup = BeautifulSoup(driver2.page_source, "html.parser")
+    time.sleep(1)
     kebhana = keb_soup.find("div", id = "searchContentDiv")
+    time.sleep(1)
     kebhana_data = kebhana.find_all("tr")
+    time.sleep(1)
     kebhana_data2 = kebhana_data[11].find_all("td")
+    time.sleep(1)
     
     # CONVERT DATA TO FLOATS
     cola_eth = float(string_coincola.strip('CNY'))
@@ -105,11 +113,12 @@ def job():
     text = "KOREA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" +"ETH@BITHUMB: " + str(bithumb_eth) + "\r\n" + "KEBHANA SGD/KRW: " + str(keb_rate) + "\r\n" + "PREMIUM: " + str(compute) + "%"
     text2 = "CHINA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth) + "\r\n" + "PREMIUM@SGD/CNY[4.9]: " + str(compute_cola_49) + "%" + "\r\n" + "PREMIUM@SGD/CNY[5.0]: " + str(compute_cola_5) + "%"
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text))
+    time.sleep(1)
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text2))
     driver2.quit()
 
-# RUN CRON EVERY 5 MINUTE
-schedule.every(5).minutes.do(job)
+# RUN CRON EVERY 6 MINUTE
+schedule.every(6).minutes.do(job)
 
 while True:
     schedule.run_pending()
