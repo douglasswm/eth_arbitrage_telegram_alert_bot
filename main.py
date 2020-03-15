@@ -93,15 +93,17 @@ def job():
     bi_eth = float(crypto_price[1].string.strip('SGD'))
     keb_rate = float(kebhana_data2[5].string)
     bithumb_eth = float(string_bithumb_rate.replace(',', ''))
-    cny_rate = float('5')
+    cny_rate_5 = float('5')
+    cny_rate_49 = float('4.9')
 
     # CALCULATE PREMIUM
     compute = ((((bithumb_eth/keb_rate)/bi_eth)*100) - 100)
-    compute_cola = ((((cola_eth/cny_rate)/bi_eth)*100) - 100)
+    compute_cola_5 = ((((cola_eth/cny_rate_5)/bi_eth)*100) - 100)
+    compute_cola_49 = ((((cola_eth/cny_rate_49)/bi_eth)*100) - 100)
 
     # SEND ALERT TO TELGRAM BOT
-    text = "ETH@BINANCE: " + str(bi_eth) + "\r\n" +"ETH@BITHUMB: " + str(bithumb_eth) + "\r\n" + "KEBHANA SGD/KRW: " + str(keb_rate) + "\r\n" + "PREMIUM: " + str(compute) + "%"
-    text2 = "CHINA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth) + "\r\n" + "ASSUMED SGD/CNY: " + str(cny_rate) + "\r\n" + "PREMIUM: " + str(compute_cola) + "%"
+    text = "KOREA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" +"ETH@BITHUMB: " + str(bithumb_eth) + "\r\n" + "KEBHANA SGD/KRW: " + str(keb_rate) + "\r\n" + "PREMIUM: " + str(compute) + "%"
+    text2 = "CHINA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth) + "\r\n" + "PREMIUM@SGD/CNY[4.9]: " + str(compute_cola_49) + "%" + "\r\n" + "PREMIUM@SGD/CNY[5.0]: " + str(compute_cola_5) + "%"
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text))
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text2))
     driver2.quit()
