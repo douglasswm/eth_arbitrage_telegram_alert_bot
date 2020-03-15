@@ -90,8 +90,10 @@ def job():
     keb_soup = BeautifulSoup(driver2.page_source, "html.parser")
     time.sleep(1)
     kebhana = keb_soup.find("div", id = "searchContentDiv")
+    print(kebhana)
     time.sleep(1)
     kebhana_data = kebhana.find_all("tr")
+    print(kebhana_data)
     if kebhana_data == []:
         kebhana_data_re = kebhana.find_all("tr")
         print("FAIL")
