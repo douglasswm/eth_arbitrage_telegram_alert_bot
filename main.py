@@ -24,6 +24,7 @@ def job():
     binance_url = "https://www.binance.sg/en"
     kebhana_url = "https://www.kebhana.com/easyone_index_en.html"
     coincola_url = "https://www.coincola.com/sell-ethereum?country_code=CN&pageNo=1"
+    coincola_buy ="https://www.coincola.com/buy-ethereum?country_code=CN&pageNo=1"
 
     # CALL COINCOLA URL
     response_coincola = requests.get(coincola_url)
@@ -32,8 +33,18 @@ def job():
     coincola_soup = BeautifulSoup(response_coincola.content, "html.parser")
     coincola = coincola_soup.find("div", class_ = "jsx-4262417281 price")
 
-    # SANITISE COINCOLA ETH RATE
+    # SANITISE COINCOLA SELL ETH RATE
     string_coincola = unicodedata.normalize('NFKD', coincola.text).encode('ascii','ignore')
+
+    # CALL COINCOLA BUY ETH URL
+    response_coincola_buy = requests.get(coincola_buy)
+
+    # INITIALISE BS4 ON COINCOLA BUY RESPONSE
+    coincola_soup_buy = BeautifulSoup(response_coincola_buy.content, "html.parser")
+    coincola_buy_eth = coincola_soup_buy.find("div", class_ = "jsx-4262417281 price")
+
+    # SANITISE COINCOLA BUY ETH RATE
+    string_coincola_buy = unicodedata.normalize('NFKD', coincola_buy_eth.text).encode('ascii','ignore')
 
     # CALL BITHUMB URL
     response_bithumb = requests.get(bithumb_url)
@@ -103,6 +114,7 @@ def job():
     driver2.quit()
     # CONVERT DATA TO FLOATS
     cola_eth = float(string_coincola.strip('CNY'))
+    cola_eth_buy = float(string_coincola_buy.strip('CNY'))
     bi_eth = float(crypto_price[1].string.strip('SGD'))
     keb_rate = float(kebhana_data2[5].string)
     bithumb_eth = float(string_bithumb_rate.replace(',', ''))
@@ -113,13 +125,18 @@ def job():
     compute = ((((bithumb_eth/keb_rate)/bi_eth)*100) - 100)
     compute_cola_5 = ((((cola_eth/cny_rate_5)/bi_eth)*100) - 100)
     compute_cola_49 = ((((cola_eth/cny_rate_49)/bi_eth)*100) - 100)
+    compute_cola_buy_5 = (((bi_eth/(cola_eth_buy/cny_rate_5))*100) - 100)
+    compute_cola_buy_49 = (((bi_eth/(cola_eth_buy/cny_rate_49))*100) - 100)
 
     # SEND ALERT TO TELGRAM BOT
-    text = "KOREA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" +"ETH@BITHUMB: " + str(bithumb_eth) + "\r\n" + "KEBHANA SGD/KRW: " + str(keb_rate) + "\r\n" + "PREMIUM: " + str(compute) + "%"
-    text2 = "CHINA MARKET" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth) + "\r\n" + "PREMIUM@SGD/CNY[4.9]: " + str(compute_cola_49) + "%" + "\r\n" + "PREMIUM@SGD/CNY[5.0]: " + str(compute_cola_5) + "%"
+    text = "\033[1m" + "BUY IN SG SELL IN KR" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" +"ETH@BITHUMB: " + str(bithumb_eth) + "\r\n" + "KEBHANA SGD/KRW: " + str(keb_rate) + "\r\n" + "PREMIUM: " + str(compute) + "%"
+    text2 = "\033[1m" + "BUY IN SG SELL IN CN" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth) + "\r\n" + "PREMIUM@SGD/CNY[4.9]: " + str(compute_cola_49) + "%" + "\r\n" + "PREMIUM@SGD/CNY[5.0]: " + str(compute_cola_5) + "%"
+    text3 = "\033[1m" + "BUY IN CN SELL IN SG" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth_buy) + "\r\n" + "PREMIUM@SGD/CNY[4.9]: " + str(compute_cola_buy_49) + "%" + "\r\n" + "PREMIUM@SGD/CNY[5.0]: " + str(compute_cola_buy_5) + "%"
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text))
     time.sleep(1)
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text2))
+    time.sleep(1)
+    requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text3))
 
 # RUN CRON EVERY 4 MINUTE
 schedule.every(4).minutes.do(job)
