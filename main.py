@@ -129,9 +129,9 @@ def job():
     compute_cola_buy_49 = (((bi_eth/(cola_eth_buy/cny_rate_49))*100) - 100)
 
     # SEND ALERT TO TELGRAM BOT
-    text = "\033[1m" + "BUY IN SG SELL IN KR" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" +"ETH@BITHUMB: " + str(bithumb_eth) + "\r\n" + "KEBHANA SGD/KRW: " + str(keb_rate) + "\r\n" + "PREMIUM: " + str(compute) + "%"
-    text2 = "\033[1m" + "BUY IN SG SELL IN CN" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth) + "\r\n" + "PREMIUM@SGD/CNY[4.9]: " + str(compute_cola_49) + "%" + "\r\n" + "PREMIUM@SGD/CNY[5.0]: " + str(compute_cola_5) + "%"
-    text3 = "\033[1m" + "BUY IN CN SELL IN SG" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth_buy) + "\r\n" + "PREMIUM@SGD/CNY[4.9]: " + str(compute_cola_buy_49) + "%" + "\r\n" + "PREMIUM@SGD/CNY[5.0]: " + str(compute_cola_buy_5) + "%"
+    text = "BUY IN SG SELL IN KR" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" +"ETH@BITHUMB: " + str(bithumb_eth) + "\r\n" + "KEBHANA SGD/KRW: " + str(keb_rate) + "\r\n" + "PREMIUM: " + str(compute) + "%"
+    text2 = "BUY IN SG SELL IN CN" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth) + "\r\n" + "PREMIUM@SGD/CNY[4.9]: " + str(compute_cola_49) + "%" + "\r\n" + "PREMIUM@SGD/CNY[5.0]: " + str(compute_cola_5) + "%"
+    text3 = "BUY IN CN SELL IN SG" + "\r\n\r\n" + "ETH@BINANCE_SG: " + str(bi_eth) + "\r\n" + "ETH@COINCOLA: " + str(cola_eth_buy) + "\r\n" + "PREMIUM@SGD/CNY[4.9]: " + str(compute_cola_buy_49) + "%" + "\r\n" + "PREMIUM@SGD/CNY[5.0]: " + str(compute_cola_buy_5) + "%"
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text))
     time.sleep(1)
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text2))
