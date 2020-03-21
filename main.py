@@ -56,9 +56,6 @@ def job():
     
     # SANITISE BITHUMB ETH RATE
     string_bithumb_rate = unicodedata.normalize('NFKD', bithumb_rate).encode('ascii','ignore')
-
-    # SEND TO TELE BITHUMB
-    # requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(string_bithumb_rate))
     
     # INITIALISE CHROME SESSION
     options = webdriver.ChromeOptions()
@@ -69,49 +66,54 @@ def job():
     
 
     # CALL BINANCE URL
-    driver.get(binance_url)
-    driver.implicitly_wait(1000)
+    try:
+        driver.get(binance_url)
+        driver.implicitly_wait(1000)
 
-    # INITIALISE BS4 ON BINANCE RESPONSE
-    time.sleep(4)
-    soup2 = BeautifulSoup(driver.page_source, "html.parser")
-    time.sleep(1)
-    crypto_price = soup2.find_all("span", attrs={"class": "price"})
-
-    # SEND TO TELE BITHUMB
-    # requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(crypto_price))
-    driver.quit()
-    time.sleep(2)
+        # INITIALISE BS4 ON BINANCE RESPONSE
+        time.sleep(4)
+        soup2 = BeautifulSoup(driver.page_source, "html.parser")
+        time.sleep(1)
+        crypto_price = soup2.find_all("span", attrs={"class": "price"})
+    except Exception as e:
+        print(e)
+    finally:    
+        driver.quit()
+        time.sleep(2)
 
     #KEB HANA
-    driver2 = webdriver.Chrome('/usr/bin/chromedriver',chrome_options=options)
-    driver2.get(kebhana_url)
-    driver2.implicitly_wait(1000)
-    time.sleep(4)
-    element_to_hover_over = driver2.find_element_by_xpath('//*[@id="kebWrapper"]/div[2]/a')
-    time.sleep(1)
-    hover = ActionChains(driver2).move_to_element(element_to_hover_over)
-    time.sleep(1)
-    hover.perform()
-    time.sleep(2)
-    driver2.find_element_by_xpath('//*[@id="kebWrapper"]/div[2]/div/ul/li[4]/a').send_keys(Keys.CONTROL + Keys.RETURN)
-    time.sleep(5)
-    window_after = driver2.window_handles[1]
-    driver2.switch_to.window(window_after)
-    time.sleep(5)
-    keb_soup = BeautifulSoup(driver2.page_source, "html.parser")
-    time.sleep(5)
-    kebhana = keb_soup.find("table", { "summary" : "This is a Current Exchange Rate Inquiry History table consisting of Currency,Cash,Wire Transfer,T/C Buy Rate,Foreign CurrencyCheckSell Rate,Basic Rate ofExchange,Exchange Commission Rate,USDExchange Rate,Buy Rate,Sell Rate,When Sending,When Receiving,Exchange Rate,Spread,Exchange Rate,Spread."})
-    print(kebhana)
-    time.sleep(1)
-    kebhana_data = kebhana.find_all("tr")
+    try:
+        driver2 = webdriver.Chrome('/usr/bin/chromedriver',chrome_options=options)
+        driver2.get(kebhana_url)
+        driver2.implicitly_wait(1000)
+        time.sleep(4)
+        element_to_hover_over = driver2.find_element_by_xpath('//*[@id="kebWrapper"]/div[2]/a')
+        time.sleep(1)
+        hover = ActionChains(driver2).move_to_element(element_to_hover_over)
+        time.sleep(1)
+        hover.perform()
+        time.sleep(2)
+        driver2.find_element_by_xpath('//*[@id="kebWrapper"]/div[2]/div/ul/li[4]/a').send_keys(Keys.CONTROL + Keys.RETURN)
+        time.sleep(5)
+        window_after = driver2.window_handles[1]
+        driver2.switch_to.window(window_after)
+        time.sleep(5)
+        keb_soup = BeautifulSoup(driver2.page_source, "html.parser")
+        time.sleep(5)
+        kebhana = keb_soup.find("table", { "summary" : "This is a Current Exchange Rate Inquiry History table consisting of Currency,Cash,Wire Transfer,T/C Buy Rate,Foreign CurrencyCheckSell Rate,Basic Rate ofExchange,Exchange Commission Rate,USDExchange Rate,Buy Rate,Sell Rate,When Sending,When Receiving,Exchange Rate,Spread,Exchange Rate,Spread."})
+        time.sleep(1)
+        kebhana_data = kebhana.find_all("tr")
+        
+        print("PASS")
     
-    print("PASS")
-   
-    time.sleep(1)
-    kebhana_data2 = kebhana_data[11].find_all("td")
-    time.sleep(1)
-    driver2.quit()
+        time.sleep(1)
+        kebhana_data2 = kebhana_data[11].find_all("td")
+        time.sleep(1)
+    except Exception as e:
+        print(e)    
+    finally:
+        driver2.quit()
+        
     # CONVERT DATA TO FLOATS
     cola_eth = float(string_coincola.strip('CNY'))
     cola_eth_buy = float(string_coincola_buy.strip('CNY'))
