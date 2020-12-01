@@ -75,6 +75,7 @@ def job():
         soup2 = BeautifulSoup(driver.page_source, "html.parser")
         time.sleep(1)
         crypto_price = soup2.find_all("span", attrs={"class": "price"})
+        print(crypto_price)
     except Exception as e:
         print(e)
     finally:    
@@ -141,11 +142,12 @@ def job():
     requests.get("https://api.telegram.org/bot" + str(api_key) +"/sendMessage?chat_id=" + str(chat_id) + "&text=" + str(text3))
 
 # RUN CRON EVERY 4 MINUTE
-schedule.every(4).minutes.do(job)
+# schedule.every(4).minutes.do(job)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)
+job()
 
 
 
